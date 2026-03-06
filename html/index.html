@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/style.css">
+
+    <title>Document</title>
+    <script type="module" src="../js/script.js"> </script>
+</head>
+
+<body>
+    <header class="header">
+        <h1 class="header--app-name">Todoアプリ</h1>
+    </header>
+    <main>
+        <div class="todo-modal hidden">
+            <button type="button" class="todo-modal--close">&times;</button>
+            <div class="input">
+                <input type="text" class="input--main" placeholder="main">
+                <input type="text" class="input--sub" placeholder="sub">
+                <input type="date" class="input--start" placeholder="start">
+                <input type="date" class="input--deadline" placeholder="deadline">
+            </div>
+            <button type="button" class="add-new-todo-btn">追加</button>
+        </div>
+        <div class="todo-box">
+            <div class="add-card card--layout">
+                <div class="add-card__box">
+                    <p class="add-card--text">追加</p>
+                    <button type="button" class="add-card__btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                            class="add-card__icon">
+                            <path fill-rule="evenodd"
+                                d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z"
+                                clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+
+</body>
+
+</html>
