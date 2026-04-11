@@ -13,7 +13,14 @@
 <body>
     <header class="header">
         <h1 class="header--app-name">Todoアプリ</h1>
+        <select class="filter">
+            <option value="all" selected>全て</option>
+            <option value="yet">未着手</option>
+            <option value="in-progress">進行中</option>
+            <option value="done">完了</option>
+        </select>
     </header>
+
     <main>
         <div class="todo-modal hidden">
             <button type="button" class="todo-modal--close">&times;</button>

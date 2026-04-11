@@ -1,43 +1,86 @@
-const todos = [
-    { id: 0, main: "口座 名義変更", sub: "みずほの名義変更", start: 28, deadline: 14 },
-    { id: 1, main: "銀行口座 名義変更", sub: "みずほの名義変更", start: 28, deadline: 14 },
-];
 const addCard = document.querySelector(".add-card");
 const addCardBtn = document.querySelector(".add-card__btn");
-const todoCard = document.querySelector(".todo-card");
-
 const addnewTodoBtn = document.querySelector(".add-new-todo-btn");
 const todoBox = document.querySelector(".todo-box");
 const todoModal = document.querySelector(".todo-modal");
 const clsModal = document.querySelector(".todo-modal--close");
+const filter = document.querySelector(".filter");
 
-const displayTodo = function (arr) {
-    for (const todo of arr) {
-        const { main, sub, start, deadline } = todo;
-        const todoHtml = `<div class="todo-card card--layout">
-                          <select class="todo-card__select">
-                             <option value="yet">未着手</option>
-                             <option value="in-progress">進行中</option>
-                             <option value="done">完了</option>
-                           </select>
-                           <h3>${main}</h3>                    
-                           <h5>${sub}</h5>
-                           <p>開始:${start}</p>
-                           <p>期限:${deadline}</p>
-                         </div>`;
-
-        todoBox.insertAdjacentHTML("beforeend", todoHtml);
-    }
+const getLocalStorage = (key) => JSON.parse(localStorage.getItem(key)) || [];
+const setLocalStorage = () => localStorage.setItem("todo", JSON.stringify(todos));
+const todos = getLocalStorage("todo");
+const createHtml = function (obj) {
+    const { id, main, sub, start, deadline, status } = obj;
+    const todoHtml = `<div class="todo-card card--layout" data-id="${id}" data-status="${status}">
+    <select class="todo-card__select">
+    <option value="yet">未着手</option>
+    <option value="in-progress">進行中</option>
+    <option value="done">完了</option>
+    </select>
+    <h3>${main}</h3>
+    <h5>${sub}</h5>
+    <p>開始:${start}</p>
+    <p>期限:${deadline}</p>
+    <button type="button" class="todo--delete">&times;</button>
+    </div>`;
+    return todoHtml;
 };
 
-addCardBtn.addEventListener("click", () => {
-    todoModal.classList.remove("hidden");
-});
-clsModal.addEventListener("click", () => {
-    todoModal.classList.add("hidden");
-});
-addnewTodoBtn.addEventListener("click", () => {
-    const id = todos.length + 1;
+const setOptionSelected = function () {
+    const cards = document.querySelectorAll(".todo-card");
+    cards.forEach(function (card) {
+        const value = card.querySelector(`option[value='${card.dataset.status}']`);
+        value.setAttribute("selected", "");
+    });
+};
+
+const changeBackroundColor = function (target, node) {
+    let backGroundColor;
+    const status = target;
+    if (status === "in-progress") {
+        backGroundColor = "#a5d8ff";
+    } else if (status === "done") {
+        backGroundColor = "#c3fae8";
+    } else {
+        backGroundColor = "#fff";
+    }
+    node.style.backgroundColor = backGroundColor;
+};
+const setBackgoundColor = function () {
+    const cards = document.querySelectorAll(".todo-card");
+    cards.forEach(function (card) {
+        changeBackroundColor(card.dataset.status, card);
+    });
+};
+
+const render = function (obj) {
+    const html = createHtml(obj);
+    addCard.insertAdjacentHTML("afterend", html);
+};
+
+const renderTodos = function (todos) {
+    for (const todo of todos) {
+        render(todo);
+    }
+    setBackgoundColor();
+    setOptionSelected();
+};
+
+const search = function (id) {
+    return todos.findIndex((obj) => obj.id === id);
+};
+
+const changeSelectColor = function (e) {
+    if (e.target.classList.contains("todo-card__select")) {
+        changeBackroundColor(e.target.value, e.target.parentElement);
+    }
+    const id = e.target.parentElement.dataset.id;
+    const result = search(id);
+    todos[result].status = e.target.value;
+    setLocalStorage();
+};
+const createNewTodo = function () {
+    const id = crypto.randomUUID();
     const newMain = document.querySelector(".input--main").value;
     const newSub = document.querySelector(".input--sub").value;
     const newStart = document.querySelector(".input--start").value;
@@ -48,49 +91,67 @@ addnewTodoBtn.addEventListener("click", () => {
         sub: newSub,
         start: newStart,
         deadline: newDeadline,
+        status: "yet",
     };
-    todos.push(newObj);
-    console.log(newObj, todos);
-    const { main, sub, start, deadline } = newObj;
+    return newObj;
+};
+const valueClear = function () {
+    let newMain = document.querySelector(".input--main");
+    let newSub = document.querySelector(".input--sub");
+    let newStart = document.querySelector(".input--start");
+    let newDeadline = document.querySelector(".input--deadline");
+    newMain.value = newSub.value = newStart.value = newDeadline.value = "";
+};
+const pushTodo = function (todo) {
+    todos.push(todo);
+};
+const saveAndRenderTodos = function (todos) {
+    setLocalStorage();
+    removeChild();
+    renderTodos(todos);
+};
+const setNewTodoToLocal = function () {
+    const todo = createNewTodo();
+    pushTodo(todo);
+    saveAndRenderTodos(todos);
+    valueClear();
+};
+const deleteTodo = function (e) {
+    if (e.target.classList.contains("todo--delete")) {
+        const index = search(e.target.closest(".todo-card").dataset.id);
+        todos.splice(index, 1);
+        saveAndRenderTodos(todos);
+    }
+};
 
-    const newTodoHtml = `<div class="todo-card card--layout">
-    <select class="todo-card__select">
-    <option value="yet">未着手</option>
-    <option value="in-progress">進行中</option>
-    <option value="done">完了</option>
-    </select>
-    <h3>${main}</h3>
-    <h5>${sub}</5>
-    <p>開始:${start}</p>
-    <p>期限:${deadline}</div>
-    </div>`;
-    addCard.insertAdjacentHTML("afterend", newTodoHtml);
+const fil = function (value) {
+    return getLocalStorage("todo").filter((todo) => todo.status === value);
+};
+const removeChild = function () {
+    const cards = document.querySelectorAll(".todo-card");
+    cards.forEach((card) => todoBox.removeChild(card));
+};
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+addnewTodoBtn.addEventListener("click", setNewTodoToLocal);
+
+addCardBtn.addEventListener("click", () => {
+    todoModal.classList.remove("hidden");
+});
+clsModal.addEventListener("click", () => {
+    todoModal.classList.add("hidden");
 });
 
-displayTodo(todos);
-const selectes = document.querySelectorAll(".todo-card__select");
-// select.addEventListener("change", () => {
-//     let color;
-//     if (select.value === "in-progress") {
-//         color = "#a5d8ff";
-//     } else if (select.value === "done") {
-//         color = "#63e6be";
-//     } else {
-//         color = "#fff";
-//     }
-//     todoCard.style.backgroundColor = color;
-// });
-// selectes.forEach((select) => {
-//     select.addEventListener("change", () => {
-//         console.log(select);
-//         let color;
-//         if (select.value === "in-progress") {
-//             color = "#a5d8ff";
-//         } else if (select.value === "done") {
-//             color = "#63e6be";
-//         } else {
-//             color = "#fff";
-//         }
-//         todoCard.style.backgroundColor = color;
-//     });
-// });
+filter.addEventListener("change", (e) => {
+    const value = filter.value;
+    removeChild();
+    if (value === "all") {
+        renderTodos(todos);
+    } else {
+        renderTodos(fil(value));
+    }
+});
+todoBox.addEventListener("change", changeSelectColor);
+todoBox.addEventListener("click", deleteTodo);
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+renderTodos(todos);
+const cards = todoBox.querySelectorAll(".todo-card");
