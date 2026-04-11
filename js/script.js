@@ -85,15 +85,20 @@ const createNewTodo = function () {
     const newSub = document.querySelector(".input--sub").value;
     const newStart = document.querySelector(".input--start").value;
     const newDeadline = document.querySelector(".input--deadline").value;
-    const newObj = {
-        id: id,
-        main: newMain,
-        sub: newSub,
-        start: newStart,
-        deadline: newDeadline,
-        status: "yet",
-    };
-    return newObj;
+
+    if (!newMain || !newSub || !newStart || !newDeadline) {
+        alert("すべて入力してください");
+    } else {
+        const newObj = {
+            id: id,
+            main: newMain,
+            sub: newSub,
+            start: newStart,
+            deadline: newDeadline,
+            status: "yet",
+        };
+        return newObj;
+    }
 };
 const valueClear = function () {
     let newMain = document.querySelector(".input--main");
@@ -105,6 +110,7 @@ const valueClear = function () {
 const pushTodo = function (todo) {
     todos.push(todo);
 };
+
 const saveAndRenderTodos = function (todos) {
     setLocalStorage();
     removeChild();
@@ -112,6 +118,7 @@ const saveAndRenderTodos = function (todos) {
 };
 const setNewTodoToLocal = function () {
     const todo = createNewTodo();
+    if (!todo) return;
     pushTodo(todo);
     saveAndRenderTodos(todos);
     valueClear();
