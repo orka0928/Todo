@@ -4,6 +4,8 @@ const addnewTodoBtn = document.querySelector(".add-new-todo-btn");
 const todoBox = document.querySelector(".todo-box");
 const todoModal = document.querySelector(".todo-modal");
 const clsModal = document.querySelector(".todo-modal--close");
+const alertModal = document.querySelector(".alert-modal");
+const alertModalCls = document.querySelector(".alert-modal--close");
 const filter = document.querySelector(".filter");
 
 const getLocalStorage = (key) => JSON.parse(localStorage.getItem(key)) || [];
@@ -25,7 +27,16 @@ const createHtml = function (obj) {
     </div>`;
     return todoHtml;
 };
+////////////
 
+const modalAlert = function (message) {
+    const html = `<p class="alert-message">${message}</p>`;
+    alertModalCls.insertAdjacentHTML("afterend", html);
+};
+const modalAlertDisplay = function (message) {
+    modalAlert(message);
+    alertModal.classList.remove("hidden");
+};
 const setOptionSelected = function () {
     const cards = document.querySelectorAll(".todo-card");
     cards.forEach(function (card) {
@@ -87,7 +98,8 @@ const createNewTodo = function () {
     const newDeadline = document.querySelector(".input--deadline").value;
 
     if (!newMain || !newSub || !newStart || !newDeadline) {
-        alert("すべて入力してください");
+        modalAlertDisplay("すべて入力してください");
+        return;
     } else {
         const newObj = {
             id: id,
@@ -138,6 +150,7 @@ const removeChild = function () {
     const cards = document.querySelectorAll(".todo-card");
     cards.forEach((card) => todoBox.removeChild(card));
 };
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 addnewTodoBtn.addEventListener("click", setNewTodoToLocal);
 
@@ -147,7 +160,9 @@ addCardBtn.addEventListener("click", () => {
 clsModal.addEventListener("click", () => {
     todoModal.classList.add("hidden");
 });
-
+alertModalCls.addEventListener("click", () => {
+    alertModal.classList.add("hidden");
+});
 filter.addEventListener("change", (e) => {
     const value = filter.value;
     removeChild();

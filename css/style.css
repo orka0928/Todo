@@ -16,18 +16,18 @@ body {
     font-size: 1.6rem;
 }
 
+main {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
 .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 0 2rem;
     margin-bottom: 4rem;
-}
-
-main {
-    width: 100%;
-    height: 100%;
-    position: relative;
 }
 
 .todo-box {
@@ -68,8 +68,18 @@ main {
     border-radius: 50%;
 }
 
-.hidden {
-    display: none;
+.todo-modal > button {
+    background: none;
+    border: none;
+    color: #9775fa;
+    border: 1px solid #9775fa;
+}
+.todo-modal > button:hover {
+    color: #fff;
+    background-color: #b197fc;
+}
+.todo-modal > button:active {
+    background-color: #845ef7;
 }
 .input > input {
     padding: 0.8rem;
@@ -81,6 +91,46 @@ main {
     width: 100%;
     justify-content: center;
 }
+.alert-modal {
+    display: grid;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    padding: 1rem;
+    min-width: 50rem;
+    min-height: 10rem;
+    background-color: #fff;
+    border-radius: 1rem;
+    box-shadow: 0px 2px 0 3px rgba(0, 0, 0, 0.11);
+    z-index: 2;
+}
+.alert-modal--close {
+    background: none;
+    border: none;
+    color: #9775fa;
+    border: 1px solid #9775fa;
+    justify-self: flex-end;
+    align-self: flex-start;
+    justify-self: flex-end;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+}
+.alert-modal--close:hover {
+    color: #fff;
+    background-color: #b197fc;
+}
+.alert-modal--close:active {
+    background-color: #845ef7;
+}
+.alert-message {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
 .add-new-todo-btn {
     justify-self: flex-end;
     width: 8rem;
@@ -132,4 +182,7 @@ main {
     box-shadow: 0px 2px 0 3px rgba(0, 0, 0, 0.11);
     line-height: 2;
     cursor: pointer;
+}
+.hidden {
+    display: none;
 }
