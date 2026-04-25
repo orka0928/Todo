@@ -11,8 +11,7 @@ const filter = document.querySelector(".filter");
 const getLocalStorage = (key) => JSON.parse(localStorage.getItem(key)) || [];
 const setLocalStorage = () => localStorage.setItem("todo", JSON.stringify(todos));
 const todos = getLocalStorage("todo");
-const createHtml = function (obj) {
-    const { id, main, sub, start, deadline, status } = obj;
+const createHtml = function ({ id, main, sub, start, deadline, status }) {
     const todoHtml = `<div class="todo-card card--layout" data-id="${id}" data-status="${status}">
     <select class="todo-card__select">
     <option value="yet">未着手</option>
