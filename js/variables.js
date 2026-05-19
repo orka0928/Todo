@@ -1,0 +1,10 @@
+export const addCard = document.querySelector(".add-card");
+export const addCardBtn = document.querySelector(".add-card__btn");
+export const addnewTodoBtn = document.querySelector(".add-new-todo-btn");
+export const todoBox = document.querySelector(".todo-box");
+export const todoModal = document.querySelector(".todo-modal");
+export const clsModal = document.querySelector(".todo-modal--close");
+export const alertModal = document.querySelector(".alert-modal");
+export const alertModalCls = document.querySelector(".alert-modal--close");
+export const filter = document.querySelector(".filter");
+export const cards = todoBox.querySelectorAll(".todo-card");
